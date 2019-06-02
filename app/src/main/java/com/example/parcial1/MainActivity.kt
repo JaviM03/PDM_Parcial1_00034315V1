@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-/*Cambios hechos de prueba*/
+/*Cambios hechos de prueba maaaaaaas*/
 class MainActivity : AppCompatActivity() {
 
     private val newMatchActivityRequestCode = 1
