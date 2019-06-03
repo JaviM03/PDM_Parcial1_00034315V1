@@ -13,7 +13,7 @@ class MatchViewModel(application: Application) : AndroidViewModel(application) {
     val allMatches: LiveData<List<Match>>
 
     init {
-        val matchesDao = MatchRoomDatabase.getDatabase(application).MatchDao()
+        val matchesDao = MatchRoomDatabase.getDatabase(application,viewModelScope).matchDao()
         repository = MatchRepository(matchesDao)
         allMatches = repository.allMatches
     }

@@ -1,17 +1,27 @@
 package com.example.parcial1
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import kotlinx.android.synthetic.main.activity_main.*
 
+
+/*Cambios hechos de prueba*/
 class MainActivity : AppCompatActivity() {
+
+    private val newMatchActivityRequestCode = 1
+    private lateinit var matchViewModel: MatchViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,26 +36,34 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
 
+        matchViewModel = ViewModelProviders.of(this).get(MatchViewModel::class.java)
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+        matchViewModel.allMatches.observe(this, Observer { words ->
+            // Update the cached copy of the words in the adapter.
+            words?.let { adapter.setMatches(it) }
+        })
+
+
+        fab.setOnClickListener {
+            val intent = Intent(this@MainActivity, NewMatchActivity::class.java)
+            startActivityForResult(intent, newMatchActivityRequestCode)
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
+        if (requestCode == newMatchActivityRequestCode && resultCode == Activity.RESULT_OK) {
+            data?.let {
+                val match = Match(it.getStringExtra(NewMatchActivity.EXTRA_REPLY))
+
+                matchViewModel.insert(match)
+            }
+        } else {
+            Toast.makeText(
+                applicationContext,
+                R.string.empty_not_saved,
+                Toast.LENGTH_LONG).show()
         }
     }
-}
+    }
