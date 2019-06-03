@@ -15,7 +15,6 @@ data class Match(
     @ColumnInfo(name = "Team2") val Team2:String,
     @ColumnInfo(name = "Score1") val Score1:String,
     @ColumnInfo(name = "Score2") val Score2:String,
-    @ColumnInfo(name = "FinalScore") val FinalScore:String,
-    @ColumnInfo(name = "date") val date: Date,
-    @ColumnInfo(name = "time") val time: Time
+    @ColumnInfo(name = "FinalScore") val FinalScore:String
+
 )

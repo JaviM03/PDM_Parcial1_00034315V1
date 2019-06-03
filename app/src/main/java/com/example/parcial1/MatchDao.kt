@@ -12,7 +12,7 @@ interface MatchDao {
     fun getAllMatches(): LiveData<List<Match>>
 
     @Insert
-    suspend fun insert(word: Match)
+    suspend fun insert(match: Match)
 
     @Query("DELETE FROM match_table")
     fun deleteAll()
